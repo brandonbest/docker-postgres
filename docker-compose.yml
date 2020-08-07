@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+
+    # Postgres
+    postgres:
+        container_name: postgres
+        build:
+            context: .
+            dockerfile: ./dockerfile
+        ports:
+            - ${POSTGRES_PORT:-5432}:5432
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-root}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+        restart: on-failure
+        volumes:
+            - ${POSTGRES_DATA_DIR:-./data}:/var/lib/postgresql:rw
+
+# Networks
+networks:
+    default:
+        external:
+            name: ${POSTGRES_NETWORK:-nginx-proxy}
